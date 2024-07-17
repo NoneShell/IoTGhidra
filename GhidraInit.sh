@@ -67,3 +67,12 @@ $HEADLESS $PROJECT_DIR $PROJECT_NAME/libs \
     -noanalysis
 
 # 2. import binary if exists
+if [ -n "$BINARY" ]; then
+    $HEADLESS $PROJECT_DIR $PROJECT_NAME \
+        -import $BINARY \
+        -loader ElfLoader \
+        -loader-linkExistingProjectLibraries true \
+        -loader-projectLibrarySearchFolder /libs \
+        -overwrite \
+        -noanalysis
+fi
