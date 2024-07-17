@@ -51,6 +51,19 @@ if [ -n "$BINARY" ]; then
 fi
 
 # 1. create project from rootfs and import all libraries
+read -p "Enter project name: " PROJECT_NAME
+declare -a import_params
+while read -r dir; do
+    import_params+=("-import $dir/*.so* ")
+    echo "Importing $dir"
+done < <(find "$ROOTFS" -type f -name "*.so*" | sed 's|/[^/]*$||' | sort -u)
 
+$HEADLESS $PROJECT_DIR $PROJECT_NAME/libs \
+    $import_params \
+    -loader ElfLoader \
+    -loader-linkExistingProjectLibraries true \
+    -loader-projectLibrarySearchFolder /libs \
+    -overwrite \
+    -noanalysis
 
 # 2. import binary if exists
