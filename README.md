@@ -1,5 +1,5 @@
 # IoTGhidra
-a simple script helps IoT Security Researchers to create a Ghidra project which automatically import Binary and all Needed So.
+a simple script helps IoT Security Researchers to create a Ghidra project which automatically imports all Needed So for the Binary to be analyzed.
 
 ```sh
 usage: ./IoTGhidra.sh -r rootfs [-b binary]
