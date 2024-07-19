@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e
 GHIDRA_INSTALL_DIR="/Applications/ghidraRun.app/Contents/MacOS"
 HEADLESS="$GHIDRA_INSTALL_DIR/support/analyzeHeadless"
 PROJECT_DIR="/Users/oneshell/Documents/Ghidra_Project"
@@ -57,7 +57,7 @@ declare -a import_params
 while IFS= read -r dir; do
     import_params+=("-import $dir/*.so* ")
     echo "Importing $dir"
-done < <(find "$ROOTFS" -type f -name "*.so*" | sed 's|/[^/]*$||' | sort -u)
+done < <(find "$ROOTFS" -type f -regex '.*\.so[^/]*$' -regex '.*\.so\(\.[0-9]+\)*$' | sed 's|/[^/]*$||' | sort -u)
 
 $HEADLESS "$PROJECT_DIR" "$PROJECT_NAME/libs" \
     $import_params \
