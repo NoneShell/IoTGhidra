@@ -54,13 +54,16 @@ fi
 read -p "Enter project name: " PROJECT_NAME
 
 declare -a import_params
+import_params=("-import")
 while IFS= read -r dir; do
-    import_params+=("-import $dir/*.so* ")
     echo "Importing $dir"
-done < <(find "$ROOTFS" -type f -regex '.*\.so[^/]*$' -regex '.*\.so\(\.[0-9]+\)*$' | sed 's|/[^/]*$||' | sort -u)
+    while IFS= read -r file; do
+        import_params+=("$file")
+    done < <(find "$dir" -type f ! -type l -regex '.*\.so[^/]*$' -regex '.*\.so\(\.[0-9]+\)*$' | sed 's|/[^/]*$||' | sort -u)
+done < <(find "$ROOTFS" -type f ! -type l -regex '.*\.so[^/]*$' -regex '.*\.so\(\.[0-9]+\)*$' | sed 's|/[^/]*$||' | sort -u)
 
 $HEADLESS "$PROJECT_DIR" "$PROJECT_NAME/libs" \
-    $import_params \
+    "${import_params[@]}" \
     -loader ElfLoader \
     -loader-linkExistingProjectLibraries true \
     -loader-projectLibrarySearchFolder /libs \
